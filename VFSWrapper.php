@@ -110,10 +110,10 @@ class VFSWrapper
 // 	{
 		
 // 	}
-// 	public function stream_stat (  )
-// 	{
-		
-// 	}
+	public function stream_stat (  )
+	{
+		return false;
+	}
 // 	public function stream_truncate (  $new_size )
 // 	{
 		
@@ -152,7 +152,7 @@ class VFSWrapper
 		{
 			return false ;
 		}
-		return ($this->resource=&$this->aFileSystem->opendir($sPath,$options)) ? true: false ;
+		return ($this->resource=$this->aFileSystem->opendir($sPath,$options)) ? true: false ;
 	}
 	public function dir_closedir()
 	{

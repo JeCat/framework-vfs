@@ -15,42 +15,44 @@ class LocalFileSystem implements IPhysicalFileSystem
 	public function & openFile($sPath,$sMode,$options,&$opened_path)
 	{
 		$opened_path = $this->sRootPath.'/'.$sPath ;
-		return fopen($opened_path,$sMode) ;
+		
+		$fo = fopen($opened_path,$sMode) ;
+		return $fo;
 	}
 	/**
 	 * @return void
 	 */
 	public function closeFile(&$resource)
 	{
-		return fclose($hResource) ;
+		return fclose($resource) ;
 	}
 	/**
 	 * @return bool
 	 */
 	public function endOfFile(&$resource)
 	{
-		return feof($hResource) ;
+		return feof($resource) ;
 	}
 	/**
 	 * @return bool
 	 */
-	public function lockFile(&$resource)
+	public function lockFile(&$resource,$operation)
 	{
-		return lock($hResource) ;
+		return flock($resource,$operation) ;
 	}
 	/**
 	 * @return bool
 	 */
 	public function flushFile(&$resource)
 	{
-		return flush($hResource) ;
+		return flush($resource) ;
 	}
 	/**
 	 * @return string
 	 */
 	public function readFile(&$resource,$nLength)
 	{
-		return fread($hResource,$nLength) ;
+		return fread($resource,$nLength) ;
 	}
 	/**
 	 * @return bool
@@ -71,7 +73,7 @@ class LocalFileSystem implements IPhysicalFileSystem
 	 */
 	public function writeFile(&$resource,$data)
 	{
-		return fwrite($hResource,$data) ;
+		return fwrite($resource,$data) ;
 	}
 
 	/**
@@ -86,7 +88,11 @@ class LocalFileSystem implements IPhysicalFileSystem
 	 */
 	public function stat($sPath,$flags)
 	{
-		return stat($this->sRootPath.'/'.$sPath) ;
+		$sFilePath = $this->sRootPath.'/'.$sPath ;
+		if( !file_exists( $sFilePath ) ){
+			return false;
+		}
+		return stat( $sFilePath ) ;
 	}
 	
 	/**
@@ -99,21 +105,21 @@ class LocalFileSystem implements IPhysicalFileSystem
 	/**
 	 * @return string
 	 */
-	public function readdir($hResource)
+	public function readdir(&$hResource)
 	{
 		return readdir($hResource) ;
 	}
 	/**
 	 * @return bool
 	 */
-	public function closedir($hResource)
+	public function closedir(&$hResource)
 	{
 		return closedir($hResource) ;
 	}
 	/**
 	 * @return bool
 	 */
-	public function rewinddir($hResource)
+	public function rewinddir(&$hResource)
 	{
 		return rewinddir($hResource) ;
 	}

@@ -18,7 +18,7 @@ interface IPhysicalFileSystem
 	/**
 	 * @return bool
 	 */
-	public function lockFile(&$resource) ;
+	public function lockFile(&$resource,$operation) ;
 	/**
 	 * @return bool
 	 */
