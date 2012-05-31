@@ -38,14 +38,17 @@ class SaeStorageFileSystem implements IPhysicalFileSystem
 			}
 		} elseif ( in_array( $arrFileInfo['mode'], array( 'x', 'x+', 'xb' ) ) ) {
 			if ( !$this->stor()->getAttr($arrFileInfo['domain'], $arrFileInfo['file']) ) {
+				$this->stor()->write( $arrFileInfo['domain'], $arrFileInfo['file'], '' );
 				$arrFileInfo['fcontent'] = '';
 			} else {
 				trigger_error("fopen({$path}): failed to create at Storage: File exists.", E_USER_WARNING);
 				return false;
 			}
 		} elseif ( in_array( $arrFileInfo['mode'], array( 'w', 'w+', 'wb' ) ) ) {
+			$this->stor()->write( $arrFileInfo['domain'], $arrFileInfo['file'], '' );
 			$arrFileInfo['fcontent'] = '';
 		} else {
+			$this->stor()->write( $arrFileInfo['domain'], $arrFileInfo['file'], '' );
 			$arrFileInfo['fcontent'] = $this->stor()->read($arrFileInfo['domain'], $arrFileInfo['file']);
 		}
 		return $arrFileInfo;
@@ -185,7 +188,12 @@ class SaeStorageFileSystem implements IPhysicalFileSystem
 			$stat['uid'] = $stat[4] = 0;
 			$stat['gid'] = $stat[5] = 0;
 			$stat['rdev'] = $stat[6] = 0;
-			$stat['size'] = $stat[7] = $attr['length'];
+			
+			$length = 0;
+			if( isset( $attr['length'] ) ){
+				$length = $attr['length'] ;
+			}
+			$stat['size'] = $stat[7] = $length;
 			$stat['atime'] = $stat[8] = 0;
 			$stat['mtime'] = $stat[9] = $attr['datetime'];
 			$stat['ctime'] = $stat[10] = $attr['datetime'];
